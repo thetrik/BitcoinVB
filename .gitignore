@@ -36,4 +36,8 @@
 *.vbw
 **/ipch
 *.tlog
+*.log
+*.lastbuildstate
+*.pdb
+*.cache
 
