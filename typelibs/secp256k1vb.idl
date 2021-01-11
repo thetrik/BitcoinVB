@@ -1,0 +1,426 @@
+
+[	
+	uuid(99380D53-91DE-4598-B583-E87E861DA89A),
+	version(1.00),
+	helpstring("libsecp256k1vb type library by The trick")
+]
+library libsecp256k1vb {
+
+#define SECP256_CC __stdcall
+
+	typedef [public] long psecp256k1_context;
+	typedef [public] long psecp256k1_scratch_space;
+	typedef [public] long secp256k1_nonce_function;
+	typedef [public] long secp256k1_ecdh_hash_function;
+	typedef [public] long secp256k1_nonce_function_hardened;
+
+	typedef struct secp256k1_pubkey {
+		unsigned char data[64];
+	} secp256k1_pubkey;
+
+	typedef struct secp256k1_ecdsa_signature {
+		unsigned char data[64];
+	} secp256k1_ecdsa_signature;
+
+	typedef struct secp256k1_xonly_pubkey {
+		unsigned char data[64];
+	} secp256k1_xonly_pubkey;
+
+	typedef struct secp256k1_keypair {
+		unsigned char data[96];
+	} secp256k1_keypair;
+
+	typedef struct secp256k1_ecdsa_recoverable_signature {
+		unsigned char data[65];
+	} secp256k1_ecdsa_recoverable_signature;
+
+	[dllname("libsecp256k1vb")]
+	module libsecp256k1vb {
+
+		const int SECP256K1_FLAGS_TYPE_MASK = 255;
+		const int SECP256K1_FLAGS_TYPE_CONTEXT = 1;
+		const int SECP256K1_FLAGS_TYPE_COMPRESSION = 2;
+
+		/** The higher bits contain the actual data. Do not use directly. */
+		const int SECP256K1_FLAGS_BIT_CONTEXT_VERIFY = 0x100;
+		const int SECP256K1_FLAGS_BIT_CONTEXT_SIGN = 0x200;
+		const int SECP256K1_FLAGS_BIT_CONTEXT_DECLASSIFY = 0x400;
+		const int SECP256K1_FLAGS_BIT_COMPRESSION = 0x100;
+
+		/** Flags to pass to secp256k1_context_create, secp256k1_context_preallocated_size, and
+		 *  secp256k1_context_preallocated_create. */
+		const int SECP256K1_CONTEXT_VERIFY = 0x101;
+		const int SECP256K1_CONTEXT_SIGN = 0x201;
+		const int SECP256K1_CONTEXT_DECLASSIFY = 0x401;
+		const int SECP256K1_CONTEXT_NONE = 1;
+
+		/** Flag to pass to secp256k1_ec_pubkey_serialize. */
+		const int SECP256K1_EC_COMPRESSED = 0x102;
+		const int SECP256K1_EC_UNCOMPRESSED = 2;
+
+		/** Prefix byte used to tag various encoded curvepoints for specific purposes */
+		const int SECP256K1_TAG_PUBKEY_EVEN = 0x02;
+		const int SECP256K1_TAG_PUBKEY_ODD = 0x03;
+		const int SECP256K1_TAG_PUBKEY_UNCOMPRESSED = 0x04;
+		const int SECP256K1_TAG_PUBKEY_HYBRID_EVEN = 0x06;
+		const int SECP256K1_TAG_PUBKEY_HYBRID_ODD = 0x07;
+
+		[entry("secp256k1_context_create")]
+		psecp256k1_context SECP256_CC secp256k1_context_create(
+			[in] long flags
+		);
+
+		[entry("secp256k1_context_clone")]
+		psecp256k1_context SECP256_CC secp256k1_context_clone(
+			[in] psecp256k1_context ctx
+		);
+
+		[entry("secp256k1_context_destroy")]
+		psecp256k1_context SECP256_CC secp256k1_context_destroy(
+			[in] psecp256k1_context ctx
+		);
+
+		[entry("secp256k1_context_set_illegal_callback")]
+		void SECP256_CC secp256k1_context_set_illegal_callback(
+			[in] psecp256k1_context ctx,
+			[in] void *fun,
+			[in] void* data
+		);
+
+		[entry("secp256k1_context_set_error_callback")]
+		void SECP256_CC secp256k1_context_set_error_callback(
+			[in] psecp256k1_context ctx,
+			[in] void *fun,
+			[in] void* data
+		);
+
+		[entry("secp256k1_scratch_space_create")]
+		psecp256k1_scratch_space SECP256_CC secp256k1_scratch_space_create(
+			[in] psecp256k1_context ctx,
+			[in] long size
+		);
+
+		[entry("secp256k1_scratch_space_destroy")]
+		void SECP256_CC secp256k1_scratch_space_destroy(
+			[in] psecp256k1_context ctx,
+			[in] psecp256k1_scratch_space scratch
+		);
+
+		[entry("secp256k1_ec_pubkey_parse")]
+		int SECP256_CC secp256k1_ec_pubkey_parse(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_pubkey* pubkey,
+			[in] void *input,
+			[in] long inputlen
+		);
+
+		[entry("secp256k1_ec_pubkey_serialize")]
+		int SECP256_CC secp256k1_ec_pubkey_serialize(
+			[in] psecp256k1_context ctx,
+			[in] void *output,
+			[in] long *outputlen,
+			[in] secp256k1_pubkey* pubkey,
+			[in] long flags
+		);
+
+		[entry("secp256k1_ecdsa_signature_parse_compact")]
+		int SECP256_CC secp256k1_ecdsa_signature_parse_compact(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_ecdsa_signature* sig,
+			[in] void *input64
+		);
+
+		[entry("secp256k1_ecdsa_signature_parse_der")]
+		int SECP256_CC secp256k1_ecdsa_signature_parse_der(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_ecdsa_signature* sig,
+			[in] void *input,
+			[in] long inputlen
+		);
+
+		[entry("secp256k1_ecdsa_signature_serialize_der")]
+		int SECP256_CC secp256k1_ecdsa_signature_serialize_der(
+			[in] psecp256k1_context ctx,
+			[in] void *output,
+			[in] long *outputlen,
+			[in] secp256k1_ecdsa_signature* sig
+		);
+
+		[entry("secp256k1_ecdsa_signature_serialize_compact")]
+		int SECP256_CC secp256k1_ecdsa_signature_serialize_compact(
+			[in] psecp256k1_context ctx,
+			[in] void *output64,
+			[in] secp256k1_ecdsa_signature* sig
+		);
+
+		[entry("secp256k1_ecdsa_verify")]
+		int SECP256_CC secp256k1_ecdsa_verify(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_ecdsa_signature *sig,
+			[in] void *msghash32,
+			[in] secp256k1_pubkey *pubkey
+		);
+
+		[entry("secp256k1_ecdsa_signature_normalize")]
+		int SECP256_CC secp256k1_ecdsa_signature_normalize(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_ecdsa_signature *sigout,
+			[in] secp256k1_ecdsa_signature *sigin
+		);
+
+		[entry("secp256k1_ecdsa_sign")]
+		int SECP256_CC secp256k1_ecdsa_sign(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_ecdsa_signature *sig,
+			[in] void *msghash32,
+			[in] void *seckey,
+			[in] secp256k1_nonce_function noncefp,
+			[in] void *ndata
+		);
+
+		[entry("secp256k1_ec_seckey_verify")]
+		int SECP256_CC secp256k1_ec_seckey_verify(
+			[in] psecp256k1_context ctx,
+			[in] void *seckey
+		);
+
+		[entry("secp256k1_ec_pubkey_create")]
+		int SECP256_CC secp256k1_ec_pubkey_create(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_pubkey *pubkey,
+			[in] void *seckey
+		);
+
+		[entry("secp256k1_ec_seckey_negate")]
+		int SECP256_CC secp256k1_ec_seckey_negate(
+			[in] psecp256k1_context ctx,
+			[in] void *seckey
+		);
+
+		[entry("secp256k1_ec_privkey_negate")]
+		int SECP256_CC secp256k1_ec_privkey_negate(
+			[in] psecp256k1_context ctx,
+			[in] void *seckey
+		);
+
+		[entry("secp256k1_ec_pubkey_negate")]
+		int SECP256_CC secp256k1_ec_pubkey_negate(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_pubkey *pubkey
+		);
+
+		[entry("secp256k1_ec_seckey_tweak_add")]
+		int SECP256_CC secp256k1_ec_seckey_tweak_add(
+			[in] psecp256k1_context ctx,
+			[in] void *seckey,
+			[in] void *tweak32
+		);
+
+		[entry("secp256k1_ec_privkey_tweak_add")]
+		int SECP256_CC secp256k1_ec_privkey_tweak_add(
+			[in] psecp256k1_context ctx,
+			[in] void *seckey,
+			[in] void *tweak32
+		);
+
+		[entry("secp256k1_ec_pubkey_tweak_add")]
+		int SECP256_CC secp256k1_ec_pubkey_tweak_add(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_pubkey *pubkey,
+			[in] void *tweak32
+		);
+
+		[entry("secp256k1_ec_seckey_tweak_mul")]
+		int SECP256_CC secp256k1_ec_seckey_tweak_mul(
+			[in] psecp256k1_context ctx,
+			[in] void *seckey,
+			[in] void *tweak32
+		);
+
+		[entry("secp256k1_ec_privkey_tweak_mul")]
+		int SECP256_CC secp256k1_ec_privkey_tweak_mul(
+			[in] psecp256k1_context ctx,
+			[in] void *seckey,
+			[in] void *tweak32
+		);
+
+		[entry("secp256k1_ec_pubkey_tweak_mul")]
+		int SECP256_CC secp256k1_ec_pubkey_tweak_mul(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_pubkey *seckey,
+			[in] void *tweak32
+		);
+
+		[entry("secp256k1_context_randomize")]
+		int SECP256_CC secp256k1_context_randomize(
+			[in] psecp256k1_context ctx,
+			[in] void *seed32
+		);
+
+		[entry("secp256k1_ec_pubkey_combine")]
+		int SECP256_CC secp256k1_ec_pubkey_combine(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_pubkey *pout,
+			[in] secp256k1_pubkey *ins,
+			[in] long n
+		);
+
+		[entry("secp256k1_context_no_precomp_get"), propget]
+		psecp256k1_context SECP256_CC secp256k1_context_no_precomp();
+
+		[entry("secp256k1_nonce_function_default_get"), propget]
+		secp256k1_nonce_function SECP256_CC secp256k1_nonce_function_default();
+
+		[entry("secp256k1_nonce_function_rfc6979_get"), propget]
+		secp256k1_nonce_function SECP256_CC secp256k1_nonce_function_rfc6979();
+
+		[entry("secp256k1_ecdh")]
+		int SECP256_CC secp256k1_ecdh(
+		    [in] psecp256k1_context ctx,
+		    [in] void *output,
+		    [in] secp256k1_pubkey *pubkey,
+		    [in] void *seckey,
+		    [in] secp256k1_ecdh_hash_function hashfp,
+		    [in] void *data
+		);
+
+		[entry("secp256k1_ecdh_hash_function_sha256_get"), propget]
+		secp256k1_ecdh_hash_function SECP256_CC secp256k1_ecdh_hash_function_sha256();
+
+		[entry("secp256k1_ecdh_hash_function_default_get"), propget]
+		secp256k1_ecdh_hash_function SECP256_CC secp256k1_ecdh_hash_function_default();
+
+		[entry("secp256k1_xonly_pubkey_parse")]
+		int SECP256_CC secp256k1_xonly_pubkey_parse(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_xonly_pubkey* pubkey,
+			[in] void *input32
+		);
+
+		[entry("secp256k1_xonly_pubkey_serialize")]
+		int SECP256_CC secp256k1_xonly_pubkey_serialize(
+			[in] psecp256k1_context ctx,
+			[in] void* output32,
+			[in] secp256k1_xonly_pubkey* pubkey
+		);
+
+		[entry("secp256k1_xonly_pubkey_from_pubkey")]
+		int SECP256_CC secp256k1_xonly_pubkey_from_pubkey(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_xonly_pubkey* xonly_pubkey,
+			[in] int *pk_parity,
+			[in] secp256k1_pubkey *pubkey
+		);
+
+		[entry("secp256k1_xonly_pubkey_tweak_add")]
+		int SECP256_CC secp256k1_xonly_pubkey_tweak_add(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_pubkey *output_pubkey,
+			[in] secp256k1_xonly_pubkey *internal_pubkey,
+			[in] void* tweak32
+		);
+
+		[entry("secp256k1_xonly_pubkey_tweak_add_check")]
+		int SECP256_CC secp256k1_xonly_pubkey_tweak_add_check(
+			[in] psecp256k1_context ctx,
+			[in] void *tweaked_pubkey32,
+			[in] int tweaked_pk_parity,
+			[in] secp256k1_xonly_pubkey *internal_pubkey,
+			[in] void *tweak32
+		);
+
+		[entry("secp256k1_keypair_create")]
+		int SECP256_CC secp256k1_keypair_create(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_keypair *keypair,
+			[in] void *seckey
+		);
+
+		[entry("secp256k1_keypair_pub")]
+		int SECP256_CC secp256k1_keypair_pub(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_pubkey *pubkey,
+			[in] secp256k1_keypair *keypair
+		);
+
+		[entry("secp256k1_keypair_xonly_pub")]
+		int SECP256_CC secp256k1_keypair_xonly_pub(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_xonly_pubkey *pubkey,
+			[in] int* pk_parity,
+			[in] secp256k1_keypair *keypair
+		);
+
+		[entry("secp256k1_keypair_xonly_tweak_add")]
+		int SECP256_CC secp256k1_keypair_xonly_tweak_add(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_keypair *keypair,
+			[in] void *tweak32
+		);
+
+		[entry("secp256k1_schnorrsig_sign")]
+		int SECP256_CC secp256k1_schnorrsig_sign(
+			[in] psecp256k1_context ctx,
+			[in] void *sig64,
+			[in] void *msg32,
+			[in] secp256k1_keypair *keypair,
+			[in] secp256k1_nonce_function_hardened noncefp,
+			[in] void *ndata
+		);
+
+		[entry("secp256k1_schnorrsig_verify")]
+		int SECP256_CC secp256k1_schnorrsig_verify(
+			[in] psecp256k1_context ctx,
+			[in] void *sig64,
+			[in] void *msg32,
+			[in] secp256k1_xonly_pubkey *pubkey
+		);
+
+		[entry("secp256k1_nonce_function_bip340_get"), propget]
+		secp256k1_nonce_function_hardened SECP256_CC secp256k1_nonce_function_bip340_get();
+
+		[entry("secp256k1_ecdsa_recoverable_signature_parse_compact")]
+		int SECP256_CC secp256k1_ecdsa_recoverable_signature_parse_compact(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_ecdsa_recoverable_signature* sig,
+			[in] void *input64,
+			[in] int recid
+		);
+
+		[entry("secp256k1_ecdsa_recoverable_signature_convert")]
+		int SECP256_CC secp256k1_ecdsa_recoverable_signature_convert(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_ecdsa_signature* sig,
+			[in] secp256k1_ecdsa_recoverable_signature* sigin
+		);
+
+		[entry("secp256k1_ecdsa_recoverable_signature_serialize_compact")]
+		int SECP256_CC secp256k1_ecdsa_recoverable_signature_serialize_compact(
+			[in] psecp256k1_context ctx,
+			[in] void *output64,
+			[in] int *recid,
+			[in] secp256k1_ecdsa_recoverable_signature* sig
+		);
+
+		[entry("secp256k1_ecdsa_sign_recoverable")]
+		int SECP256_CC secp256k1_ecdsa_sign_recoverable(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_ecdsa_recoverable_signature *sig,
+			[in] void *msghash32,
+			[in] void *seckey,
+			[in] secp256k1_nonce_function noncefp,
+			[in] void *ndata
+		);
+
+		[entry("secp256k1_ecdsa_recover")]
+		int SECP256_CC secp256k1_ecdsa_recover(
+			[in] psecp256k1_context ctx,
+			[in] secp256k1_pubkey *pubkey,
+			[in] secp256k1_ecdsa_recoverable_signature *sig,
+			[in] void *msghash32
+		);
+
+
+	}
+
+}

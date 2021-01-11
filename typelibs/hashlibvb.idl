@@ -1,0 +1,31 @@
+[	
+	uuid(99380D53-91DE-4598-B583-E87E861DA89B),
+	version(1.00),
+	helpstring("hashlibvb type library by The trick")
+]
+library ripemd160vb {
+
+	[dllname("hashlibvb")]
+	module hashlibvb {
+
+		[entry("ripemd160")]
+		void ripemd160(
+			[in] void* in, 
+			[in] long length, 
+			[in] void* out);
+
+		[entry("sha512")]
+		void sha512(
+			[in] void* in, 
+			[in] long length, 
+			[in] void* out);
+
+		[entry("sha256")]
+		void sha256(
+			[in] void* in, 
+			[in] long length, 
+			[in] void* out);
+
+	}
+
+}

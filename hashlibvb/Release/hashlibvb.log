@@ -1,0 +1,34 @@
+﻿Построение начато 11.01.2021 23:16:51.
+     1>Проект "C:\Users\The trick\YandexDisk\Projects\BitcoinVB\hashlibvb\hashlibvb.vcxproj" в узле 2 (целевые объекты build).
+     1>InitializeBuildStatus:
+         Создание "Release\hashlibvb.unsuccessfulbuild", так как было задано "AlwaysCreate".
+       ClCompile:
+         Для всех выходных данных обновления не требуется.
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _WINDLL /D _UNICODE /D UNICODE /Gm- /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TC /analyze- /errorReport:prompt Coin25519\src\crypto\ripemd160.c Coin25519\src\crypto\sha256.c Coin25519\src\crypto\sha512.c
+         ripemd160.c
+     1>Coin25519\src\crypto\ripemd160.c(6): warning C4005: NDEBUG: изменение макроопределения
+                 аргументы командной строки:  см. предыдущее определение "NDEBUG"
+     1>Coin25519\src\crypto\ripemd160.c(295): warning C4244: +=: преобразование "unsigned long" в "uint8_t", возможна потеря данных
+     1>Coin25519\src\crypto\ripemd160.c(306): warning C4244: +=: преобразование "unsigned long" в "uint8_t", возможна потеря данных
+         sha256.c
+     1>Coin25519\src\crypto\sha256.c(186): warning C4018: >: несоответствие типов со знаком и без знака
+     1>Coin25519\src\crypto\sha256.c(190): warning C4018: >=: несоответствие типов со знаком и без знака
+         sha512.c
+     1>Coin25519\src\crypto\sha512.c(163): warning C4018: >: несоответствие типов со знаком и без знака
+     1>Coin25519\src\crypto\sha512.c(167): warning C4018: >=: несоответствие типов со знаком и без знака
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\The trick\YandexDisk\Projects\BitcoinVB\hashlibvb\Release\hashlibvb.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\WinDDK\7600.16385.1\lib\wxp\i386 /LIBPATH:C:\WinDDK\7600.16385.1\lib\Crt\i386 msvcrt_winxp.obj kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /DEF:"libdef.def" /MANIFEST:NO /PDB:"C:\Users\The trick\YandexDisk\Projects\BitcoinVB\hashlibvb\Release\hashlibvb.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\The trick\YandexDisk\Projects\BitcoinVB\hashlibvb\Release\hashlibvb.lib" /MACHINE:X86 /DLL Release\ripemd160.obj
+         Release\sha256.obj
+         Release\sha512.obj
+            Создается библиотека C:\Users\The trick\YandexDisk\Projects\BitcoinVB\hashlibvb\Release\hashlibvb.lib и объект C:\Users\The trick\YandexDisk\Projects\BitcoinVB\hashlibvb\Release\hashlibvb.exp
+         Создание кода
+         Создание кода завершено
+         hashlibvb.vcxproj -> C:\Users\The trick\YandexDisk\Projects\BitcoinVB\hashlibvb\Release\hashlibvb.dll
+       FinalizeBuildStatus:
+         Файл "Release\hashlibvb.unsuccessfulbuild" удаляется.
+         Обращение к "Release\hashlibvb.lastbuildstate".
+     1>Построение проекта "C:\Users\The trick\YandexDisk\Projects\BitcoinVB\hashlibvb\hashlibvb.vcxproj" завершено (целевые объекты build).
+
+Построение успешно завершено.
+
+Затраченное время: 00:00:00.98
