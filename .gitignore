@@ -34,4 +34,4 @@
 *.sdf
 *.ipch
 *.vbw
-**/ipch
+**/ipch/*
